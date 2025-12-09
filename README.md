@@ -1,75 +1,268 @@
-<header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Sender</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-hover-color: #0056b3;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #343a40;
+            --border-color: #ced4da;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-# Introduction to GitHub
+        .container {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+        }
 
-_Get started using GitHub in less than an hour._
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 2.2em;
+        }
 
-</header>
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-<!--
-  <<< Author notes: Step 1 >>>
-  Choose 3-5 steps for your course.
-  The first step is always the hardest, so pick something easy!
-  Link to docs.github.com for further explanations.
-  Encourage users to open new tabs for steps!
--->
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
 
-## Step 1: Create a branch
+        input[type="text"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-_Welcome to "Introduction to GitHub"! :wave:_
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
 
-**What is GitHub?**: GitHub is a collaboration platform that uses _[Git](https://docs.github.com/get-started/quickstart/github-glossary#git)_ for versioning. GitHub is a popular place to share and contribute to [open-source](https://docs.github.com/get-started/quickstart/github-glossary#open-source) software.
-<br>:tv: [Video: What is GitHub?](https://www.youtube.com/watch?v=pBy1zgt0XPc)
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
 
-**What is a repository?**: A _[repository](https://docs.github.com/get-started/quickstart/github-glossary#repository)_ is a project containing files and folders. A repository tracks versions of files and folders. For more information, see "[About repositories](https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories)" from GitHub Docs.
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            font-weight: 600;
+        }
 
-**What is a branch?**: A _[branch](https://docs.github.com/en/get-started/quickstart/github-glossary#branch)_ is a parallel version of your repository. By default, your repository has one branch named `main` and it is considered to be the definitive branch. Creating additional branches allows you to copy the `main` branch of your repository and safely make any changes without disrupting the main project. Many people use branches to work on specific features without affecting any other parts of the project.
+        button:hover {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+        }
 
-Branches allow you to separate your work from the `main` branch. In other words, everyone's work is safe while you contribute. For more information, see "[About branches](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches)".
+        .message-status {
+            margin-top: 25px;
+            padding: 12px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            font-weight: 500;
+            text-align: center;
+        }
 
-**What is a profile README?**: A _[profile README](https://docs.github.com/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme)_ is essentially an "About me" section on your GitHub profile where you can share information about yourself with the community on GitHub.com. GitHub shows your profile README at the top of your profile page. For more information, see "[Managing your profile README](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme)".
+        .message-status.success {
+            background-color: #d4edda;
+            color: var(--success-color);
+            border: 1px solid #c3e6cb;
+        }
 
-![profile-readme-example](/images/profile-readme-example.png)
+        .message-status.error {
+            background-color: #f8d7da;
+            color: var(--error-color);
+            border: 1px solid #f5c6cb;
+        }
 
-### :keyboard: Activity: Your first branch
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
 
-1. Open a new browser tab and navigate to your newly made repository. Then, work on the steps in your second tab while you read the instructions in this tab.
-2. Navigate to the **< > Code** tab in the header menu of your repository.
+            h1 {
+                font-size: 1.8em;
+            }
 
-   ![code-tab](/images/code-tab.png)
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📨 SMS Sender</h1>
 
-3. Click on the **main** branch drop-down.
+        <form id="smsForm">
+            <div class="form-group">
+                <label for="apiUrl">API Endpoint URL:</label>
+                <input type="url" id="apiUrl" placeholder="e.g., https://api.your-sms-provider.com/send" required>
+            </div>
 
-   ![main-branch-dropdown](/images/main-branch-dropdown.png)
+            <div class="form-group">
+                <label for="apiKey">API Key (or Authorization Header Value):</label>
+                <input type="text" id="apiKey" placeholder="e.g., Bearer sk-your_api_key_here" required>
+            </div>
 
-4. In the field, name your branch `my-first-branch`. In this case, the name must be `my-first-branch` to trigger the course workflow.
-5. Click **Create branch: my-first-branch** to create your branch.
+            <div class="form-group">
+                <label for="to">Recipient (e.g., +1234567890):</label>
+                <input type="text" id="to" placeholder="+1XXXXXXXXXX" required>
+            </div>
 
-   ![create-branch-button](/images/create-branch-button.png)
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" maxlength="160" placeholder="Your SMS message here (max 160 chars)" required></textarea>
+                <small style="float: right;">Characters: <span id="charCount">0</span>/160</small>
+            </div>
 
-   The branch will automatically switch to the one you have just created.
-   The **main** branch drop-down bar will reflect your new branch and display the new branch name.
+            <button type="submit" id="sendButton">Send SMS</button>
+        </form>
 
-6. Wait about 20 seconds then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/en/actions) will automatically update to the next step.
+        <div id="statusMessage" class="message-status"></div>
+    </div>
 
-<footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const smsForm = document.getElementById('smsForm');
+            const apiUrlInput = document.getElementById('apiUrl');
+            const apiKeyInput = document.getElementById('apiKey');
+            const toInput = document.getElementById('to');
+            const messageInput = document.getElementById('message');
+            const sendButton = document.getElementById('sendButton');
+            const statusMessageDiv = document.getElementById('statusMessage');
+            const charCountSpan = document.getElementById('charCount');
 
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
+            // Load saved settings from local storage
+            apiUrlInput.value = localStorage.getItem('smsApiUrl') || '';
+            apiKeyInput.value = localStorage.getItem('smsApiKey') || '';
+            toInput.value = localStorage.getItem('smsRecipient') || '';
 
----
+            messageInput.addEventListener('input', () => {
+                const currentLength = messageInput.value.length;
+                charCountSpan.textContent = currentLength;
+            });
 
-Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/introduction-to-github) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
+            smsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-&copy; 2024 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+                // Save current settings to local storage
+                localStorage.setItem('smsApiUrl', apiUrlInput.value);
+                localStorage.setItem('smsApiKey', apiKeyInput.value);
+                localStorage.setItem('smsRecipient', toInput.value);
 
-</footer>
+                const apiUrl = apiUrlInput.value.trim();
+                const apiKey = apiKeyInput.value.trim();
+                const to = toInput.value.trim();
+                const message = messageInput.value.trim();
+
+                if (!apiUrl || !apiKey || !to || !message) {
+                    showStatus('All fields are required!', 'error');
+                    return;
+                }
+
+                sendButton.disabled = true;
+                sendButton.textContent = 'Sending...';
+                statusMessageDiv.style.display = 'none';
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Assuming API Key is sent as an Authorization header.
+                            // This might need adjustment based on your specific SMS provider's API.
+                            // e.g., 'Authorization': Bearer ${apiKey} or 'X-API-Key': apiKey
+                            'Authorization': apiKey.startsWith('Bearer ') ? apiKey : Bearer ${apiKey}
+                            // For other providers, it might be:
+                            // 'X-API-Key': apiKey,
+                            // 'api_key': apiKey,
+                        },
+                        body: JSON.stringify({
+                            to: to,
+                            message: message,
+                            // Add other necessary parameters for your API, e.g., 'from', 'sender_id', etc.
+                            // from: 'YourSenderID',
+                            // channel: 'sms'
+                        }),
+                    });
+
+                    const responseData = await response.json();
+
+                    if (response.ok) {
+                        showStatus('SMS sent successfully! Response: ' + JSON.stringify(responseData), 'success');
+                        // Optionally clear the message after success
+                        messageInput.value = '';
+                        charCountSpan.textContent = '0';
+                    } else {
+                        showStatus(Error sending SMS: ${response.status} - ${responseData.message || JSON.stringify(responseData)}, 'error');
+                    }
+
+                } catch (error) {
+                    console.error('Network or API Error:', error);
+                    showStatus('Failed to connect to API or an unexpected error occurred. Check console for details.', 'error');
+                } finally {
+                    sendButton.disabled = false;
+                    sendButton.textContent = 'Send SMS';
+                }
+            });
+
+            function showStatus(message, type) {
+                statusMessageDiv.textContent = message;
+                statusMessageDiv.className = message-status ${type};
+                statusMessageDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
